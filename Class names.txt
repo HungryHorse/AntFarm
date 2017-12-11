@@ -1,0 +1,29 @@
+Form
+_DrawNests
+_DrawFoodSources
+_DrawAgents(Add craying food)
+
+Bug bois
+-FoodMemory
+-CarryingFood
+-FoundFood
+-NestMemory
+_TakeFood
+_TakeInformation
+_TakeGeoLocationNest
+_TakeGoLocationFood
+_ForgetFoodLocation
+_ForgetNestLocation
+
+Food
+-Quantity
+-Location
+
+Nest
+-Location
+
+
+
+
+
+Thief ants
