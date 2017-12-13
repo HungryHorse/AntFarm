@@ -7,17 +7,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using SteeringProject;
 using SOFT152SteeringLibrary;
 
 namespace SOFT152Steering
 {
     public partial class AntFoodForm : Form
     {
+        // decalers list of agents
+        private List<AntAgent> antList;
 
-        // decalare two sample agents
-        private   AntAgent agent1;
-        private   AntAgent agent2;
+        // decalers list of nests
+        private List<Nest> nestList;
+
+        // decalers list of food
+        private List<Food> foodList;
 
         // Declare a stationary object
         private SOFT152Vector someObject;
@@ -35,12 +39,24 @@ namespace SOFT152Steering
 
             CreateBackgroundImage();
 
-            CreateAnts(); 
+            nestList = new List<Nest>();
+            foodList = new List<Food>();
+
+            CreateAnts();
+
+            HardCodeFoodLocation();
+
+            HardCodeNestLocation(); 
         }
 
         private void CreateAnts()
         {
+            antList = new List<AntAgent>();
+            AntAgent tempAgent;
             Rectangle worldLimits;
+            int randX;
+            int randY;
+            int antLimit;
 
             // create a radnom object to pass to the ants
             randomGenerator = new Random();
@@ -50,14 +66,54 @@ namespace SOFT152Steering
             // on which they are displayed
             worldLimits = new Rectangle(0, 0, drawingPanel.Width, drawingPanel.Height);
 
-            // create a couple of agents at some postions 
-            agent1 = new AntAgent(new SOFT152Vector(100, 150), randomGenerator, worldLimits);
+            antLimit = 100;
 
-            agent2 = new AntAgent(new SOFT152Vector(200, 150), randomGenerator, worldLimits);
+            for (int i = 0; i < antLimit; i++)
+            {
+                randX = randomGenerator.Next(0, worldLimits.Width + 1);
+                randY = randomGenerator.Next(0, worldLimits.Height + 1);
+                tempAgent = new AntAgent(new SOFT152Vector(randX, randY), randomGenerator, worldLimits);
+                antList.Add(tempAgent);
+                antList[i].AgentSpeed = 1.0;
+                antList[i].WanderLimits = 0.25;
 
+                // keep the agent within the world
+                antList[i].ShouldStayInWorldBounds = true;
+            }
 
-            // create an object at a arbitary position
             someObject = new SOFT152Vector(250, 250);
+        }
+
+        private void HardCodeFoodLocation()
+        {
+            SOFT152Vector vector;
+
+            vector = new SOFT152Vector(30, 40);
+            CreateFoodSource(vector);
+        }
+
+        private void HardCodeNestLocation()
+        {
+            SOFT152Vector vector;
+
+            vector = new SOFT152Vector(200, 100);
+            CreateNest(vector);
+        }
+
+        private void CreateFoodSource(SOFT152Vector position)
+        { 
+            Food tempFood;
+
+            tempFood = new Food(position);
+            foodList.Add(tempFood);
+        }
+
+        private void CreateNest(SOFT152Vector position)
+        {
+            Nest tempNest;
+
+            tempNest = new Nest(position);
+            nestList.Add(tempNest);
         }
 
         /// <summary>
@@ -86,105 +142,72 @@ namespace SOFT152Steering
 
             // set some values for agent1
             // before it moves
-            agent1.AgentSpeed = 1.0;
-            agent1.WanderLimits = 0.25;
-
-            // keep the agent within the world
-            agent1.ShouldStayInWorldBounds = true;
-
-            // let agent1 wander
-            agent1.Wander();
-
-
-            // again set some values for agent2 before moving
-            // agent2 is slower than agent1 to show some following behaviour
-            agent2.AgentSpeed = 0.9;
-
-            agent2.AvoidDistance = 100;
-            agent2.ShouldStayInWorldBounds = true;
-
-            // get agent1 position
-            tempPosition = agent1.AgentPosition;
-
-           // agent2.FleeFrom(tempPosition);
-
-             agent2.Approach(tempPosition);
-
-
-            // or get the agent to approach or flee from the stationary object
-      
-        //    agent2.Approach(someObject);
-
-
-            // after making a movement, now draw the agents
-            // DrawAgents();
-
-            DrawAgentsDoubleBuffering();
-        }
-
-        private void DrawAgents()
-        {
-
-            // using FillRectangle to draw the agents
-            // so declare variables to draw with
-            float agentXPosition;
-            float agentYPosition;
-
-            // some arbitary size to draw the Ant
-            float antSize;
-
-            antSize = 5.0f;
-
-            Brush solidBrush;
-
-            // get the graphics context of the panel
-            using (Graphics g = drawingPanel.CreateGraphics())
+            
+            for (int i = 0; i < antList.Count; i++)
             {
-                g.Clear(Color.White);
+                for (int j = 0; j < foodList.Count; j++)
+                {
+                    if(antList[i].AgentPosition.Distance(foodList[j].location) < 5)
+                    {
+                        antList[i].isCarryingFood = true;
+                    }
+                    else if (antList[i].AgentPosition.Distance(foodList[j].location) < 20)
+                    {
+                        antList[i].FoodPosMemory = foodList[j].location;
+                    }
+                }
 
-                // get the 1st agent position
-                agentXPosition = (float)agent1.AgentPosition.X;
-                agentYPosition = (float)agent1.AgentPosition.Y;
+                for (int k = 0; k < nestList.Count; k++)
+                {
+                    if(antList[i].AgentPosition.Distance(nestList[k].location) < 5)
+                    {
+                        antList[i].isCarryingFood = false;
+                    }
+                    else if (antList[i].AgentPosition.Distance(nestList[k].location) < 20)
+                    {
+                        antList[i].NestPosMemory = nestList[k].location;
+                    }
+                }
 
-                // create a brush
-                solidBrush = new SolidBrush(Color.Red);
-
-                // draw the 1st agent
-                g.FillRectangle(solidBrush, agentXPosition, agentYPosition, antSize, antSize);
-
-
-                // get the 2nd agent position
-                agentXPosition = (float)agent2.AgentPosition.X;
-                agentYPosition = (float)agent2.AgentPosition.Y;
-
-                // change colour of brush
-                solidBrush = new SolidBrush(Color.Blue);
-
-                // draw the 2nd agent
-                g.FillRectangle(solidBrush, agentXPosition, agentYPosition, antSize, antSize);
-
-                // now draw the stationary object
-                // change colour of brush
-                solidBrush = new SolidBrush(Color.Green);
-                g.FillRectangle(solidBrush, (float)someObject.X, (float)someObject.Y, 20, 20);
-
-
+                if (antList[i].FoodPosMemory != null && !antList[i].isCarryingFood)
+                {
+                    antList[i].Approach(antList[i].FoodPosMemory);
+                }
+                else if (antList[i].NestPosMemory != null && antList[i].isCarryingFood)
+                {
+                    antList[i].Approach(antList[i].NestPosMemory);
+                }
+                // let agent1 wander
+                else
+                {
+                    antList[i].Wander();
+                }
             }
 
-            // dispose of resources
-            solidBrush.Dispose();
+            DrawAgentsDoubleBuffering();
+
         }
 
+
+        
         /// <summary>
         /// Draws the ants and any stationary objects using double buffering
         /// </summary>
         private void DrawAgentsDoubleBuffering()
         {
-
+            AntAgent agent1;
+            Food food1;
+            Nest nest1;
             // using FillRectangle to draw the agents
             // so declare variables to draw with
             float agentXPosition;
             float agentYPosition;
+
+            float foodXPosition;
+            float foodYPosition;
+
+            float nestXPosition;
+            float nestYPosition;
 
             // some arbitary size to draw the Ant
             float antSize;
@@ -196,34 +219,47 @@ namespace SOFT152Steering
             // get the graphics context of the background image
             using (Graphics backgroundGraphics =  Graphics.FromImage(backgroundImage))
             {
+                
                 backgroundGraphics.Clear(Color.White);
 
-                // get the 1st agent position
-                agentXPosition = (float)agent1.AgentPosition.X;
-                agentYPosition = (float)agent1.AgentPosition.Y;
+                for (int i = 0; i < antList.Count; i++)
+                {
+                    solidBrush = new SolidBrush(Color.Red);
+                    agent1 = antList[i];
+                    agentXPosition = (float)agent1.AgentPosition.X;
+                    agentYPosition = (float)agent1.AgentPosition.Y;
 
-                // create a brush
-                solidBrush = new SolidBrush(Color.Red);
+                    // create a brush
+                    if (agent1.isCarryingFood)
+                    {
+                        solidBrush = new SolidBrush(Color.Purple);
+                    }
 
-                // draw the 1st agent on the backgroundImage
-                backgroundGraphics.FillRectangle(solidBrush, agentXPosition, agentYPosition, antSize, antSize);
+                    // draw the 1st agent on the backgroundImage
+                    backgroundGraphics.FillRectangle(solidBrush, agentXPosition, agentYPosition, antSize, antSize);
+                }
 
-
-                // get the 2nd agent position
-                agentXPosition = (float)agent2.AgentPosition.X;
-                agentYPosition = (float)agent2.AgentPosition.Y;
-
-                // change colour of brush
                 solidBrush = new SolidBrush(Color.Blue);
 
-                // draw the 2nd agent on the backgroundImage
-                backgroundGraphics.FillRectangle(solidBrush, agentXPosition, agentYPosition, antSize, antSize);
+                for(int i = 0; i < foodList.Count; i++)
+                {
+                    food1 = foodList[i];
+                    foodXPosition = (float)food1.location.X;
+                    foodYPosition = (float)food1.location.Y;
 
-                // now draw the stationary object
-                // change colour of brush
+                    backgroundGraphics.FillEllipse(solidBrush, foodXPosition, foodYPosition, (food1.quantity / 100) * 20, (food1.quantity / 100) * 20);
+                }
+
                 solidBrush = new SolidBrush(Color.Green);
-                backgroundGraphics.FillRectangle(solidBrush, (float)someObject.X, (float)someObject.Y, 20, 20);
 
+                for (int i = 0; i < nestList.Count; i++)
+                {
+                    nest1 = nestList[i];
+                    nestXPosition = (float)nest1.location.X;
+                    nestYPosition = (float)nest1.location.Y;
+
+                    backgroundGraphics.FillEllipse(solidBrush, nestXPosition, nestYPosition, 20, 20);
+                }
             }
 
             // now draw the image on the panel
@@ -249,3 +285,40 @@ namespace SOFT152Steering
         }
     }
 }
+
+
+
+//private void DrawAgents(AntAgent agent1)
+//{
+
+//    // using FillRectangle to draw the agents
+//    // so declare variables to draw with
+//    float agentXPosition;
+//    float agentYPosition;
+
+//    // some arbitary size to draw the Ant
+//    float antSize;
+
+//    antSize = 5.0f;
+
+//    Brush solidBrush;
+
+//    // get the graphics context of the panel
+//    using (Graphics g = drawingPanel.CreateGraphics())
+//    {
+//        // get the 1st agent position
+//        agentXPosition = (float)agent1.AgentPosition.X;
+//        agentYPosition = (float)agent1.AgentPosition.Y;
+
+//        // create a brush
+//        solidBrush = new SolidBrush(Color.Red);
+
+//        // draw the 1st agent
+//        g.FillRectangle(solidBrush, agentXPosition, agentYPosition, antSize, antSize);
+
+
+//    }
+
+//    // dispose of resources
+//    solidBrush.Dispose();
+//}

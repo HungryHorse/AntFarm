@@ -21,7 +21,14 @@ namespace SOFT152Steering
         /// </summary>
         public double AgentSpeed { set; get; }  
 
+        /// <summary>
+        /// The memory of the latest nest and food poistion discovered 
+        /// </summary>
+        public SOFT152Vector NestPosMemory { set; get; }
 
+        public SOFT152Vector FoodPosMemory { set; get; }
+
+        public bool isCarryingFood;
         /// <summary>
         /// If the agent is using the the ApproachAgent() method, this property defines
         /// at what point the agent will reduce the speed of approach to miminic a 
