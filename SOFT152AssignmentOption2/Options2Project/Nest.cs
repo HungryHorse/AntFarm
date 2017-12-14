@@ -9,6 +9,9 @@ namespace SteeringProject
 {
     class Nest
     {
+        /// <summary>
+        /// The location of the nest in the world
+        /// </summary>
         public SOFT152Vector location { get; set; }
 
         public Nest(SOFT152Vector position)

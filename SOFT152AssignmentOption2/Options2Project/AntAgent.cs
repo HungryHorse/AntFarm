@@ -22,11 +22,13 @@ namespace SOFT152Steering
         public double AgentSpeed { set; get; }  
 
         /// <summary>
-        /// The memory of the latest nest and food poistion discovered 
+        /// The location of the current food and nest known the agent 
         /// </summary>
         public SOFT152Vector NestPosMemory { set; get; }
 
         public SOFT152Vector FoodPosMemory { set; get; }
+
+        public SOFT152Vector ErasedFoodLocation { set; get; }
 
         public bool isCarryingFood;
         /// <summary>

@@ -42,6 +42,7 @@
             this.drawingPanel.Name = "drawingPanel";
             this.drawingPanel.Size = new System.Drawing.Size(373, 320);
             this.drawingPanel.TabIndex = 0;
+            this.drawingPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.drawingPanel_MouseClick);
             // 
             // startButton
             // 
@@ -68,7 +69,7 @@
             this.timer.Interval = 20;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // SteeringForm
+            // AntFoodForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -76,7 +77,7 @@
             this.Controls.Add(this.stopButton);
             this.Controls.Add(this.startButton);
             this.Controls.Add(this.drawingPanel);
-            this.Name = "SteeringForm";
+            this.Name = "AntFoodForm";
             this.Text = "Steering";
             this.ResumeLayout(false);
 

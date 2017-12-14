@@ -14,13 +14,13 @@ namespace SOFT152Steering
 {
     public partial class AntFoodForm : Form
     {
-        // decalers list of agents
+        // Declares list of agents
         private List<AntAgent> antList;
 
-        // decalers list of nests
+        // Declares list of nests
         private List<Nest> nestList;
 
-        // decalers list of food
+        // Declares list of food
         private List<Food> foodList;
 
         // Declare a stationary object
@@ -43,10 +43,6 @@ namespace SOFT152Steering
             foodList = new List<Food>();
 
             CreateAnts();
-
-            HardCodeFoodLocation();
-
-            HardCodeNestLocation(); 
         }
 
         private void CreateAnts()
@@ -82,22 +78,6 @@ namespace SOFT152Steering
             }
 
             someObject = new SOFT152Vector(250, 250);
-        }
-
-        private void HardCodeFoodLocation()
-        {
-            SOFT152Vector vector;
-
-            vector = new SOFT152Vector(30, 40);
-            CreateFoodSource(vector);
-        }
-
-        private void HardCodeNestLocation()
-        {
-            SOFT152Vector vector;
-
-            vector = new SOFT152Vector(200, 100);
-            CreateNest(vector);
         }
 
         private void CreateFoodSource(SOFT152Vector position)
@@ -145,13 +125,34 @@ namespace SOFT152Steering
             
             for (int i = 0; i < antList.Count; i++)
             {
+
                 for (int j = 0; j < foodList.Count; j++)
                 {
-                    if(antList[i].AgentPosition.Distance(foodList[j].location) < 5)
+                    if (antList[i].AgentPosition.Distance(foodList[j].location) < 5)
                     {
-                        antList[i].isCarryingFood = true;
+                        if (foodList[j].quantity <= 0)
+                        {
+                            if (antList[i].FoodPosMemory != null)
+                            {
+                                antList[i].ErasedFoodLocation = new SOFT152Vector(antList[i].FoodPosMemory);
+                            }
+                            antList[i].FoodPosMemory = null;
+                        }
+                        else if(!antList[i].isCarryingFood)
+                        {
+                            foodList[j].quantity -= 1;
+                            antList[i].isCarryingFood = true;
+                        }
                     }
-                    else if (antList[i].AgentPosition.Distance(foodList[j].location) < 20)
+
+                    else if (antList[i].AgentPosition.Distance(foodList[j].location) < 40 && antList[i].ErasedFoodLocation != null)
+                    {
+                        if (antList[i].ErasedFoodLocation.X != foodList[j].location.X && antList[i].ErasedFoodLocation.Y != foodList[j].location.Y)
+                        {
+                            antList[i].FoodPosMemory = foodList[j].location;
+                        }
+                    }
+                    else if(antList[i].AgentPosition.Distance(foodList[j].location) < 40)
                     {
                         antList[i].FoodPosMemory = foodList[j].location;
                     }
@@ -163,11 +164,46 @@ namespace SOFT152Steering
                     {
                         antList[i].isCarryingFood = false;
                     }
-                    else if (antList[i].AgentPosition.Distance(nestList[k].location) < 20)
+                    else if (antList[i].AgentPosition.Distance(nestList[k].location) < 40)
                     {
                         antList[i].NestPosMemory = nestList[k].location;
                     }
                 }
+
+                for (int l = 0; l < antList.Count; l++)
+                {
+                    if (antList[i].AgentPosition.Distance(antList[l].AgentPosition) < 5 && i != l)
+                    {
+                        if (antList[l].NestPosMemory != null && antList[i].NestPosMemory == null)
+                        {
+                            antList[i].NestPosMemory = new SOFT152Vector(antList[l].NestPosMemory);
+                        }
+                        if (antList[l].FoodPosMemory != null && antList[i].FoodPosMemory == null)
+                        {
+                            if (antList[i].ErasedFoodLocation != null && antList[l].FoodPosMemory != null)
+                            {
+                                if (antList[i].ErasedFoodLocation.X != antList[l].FoodPosMemory.X && antList[i].ErasedFoodLocation.Y != antList[l].FoodPosMemory.Y)
+                                {
+                                    antList[i].FoodPosMemory = new SOFT152Vector(antList[l].FoodPosMemory);
+                                }
+                            }
+                            else
+                            {
+                                antList[i].FoodPosMemory = new SOFT152Vector(antList[l].FoodPosMemory);
+                            }
+                        }
+                    }
+                }
+
+                if(randomGenerator.Next(0, 501) <= 2)
+                {
+                    antList[i].FoodPosMemory = null;
+                }
+                if (randomGenerator.Next(0, 501) <= 2)
+                {
+                    antList[i].NestPosMemory = null;
+                }
+
 
                 if (antList[i].FoodPosMemory != null && !antList[i].isCarryingFood)
                 {
@@ -212,6 +248,8 @@ namespace SOFT152Steering
             // some arbitary size to draw the Ant
             float antSize;
 
+            int foodPercent;
+
             antSize = 5.0f;
 
             Brush solidBrush;
@@ -239,7 +277,7 @@ namespace SOFT152Steering
                     backgroundGraphics.FillRectangle(solidBrush, agentXPosition, agentYPosition, antSize, antSize);
                 }
 
-                solidBrush = new SolidBrush(Color.Blue);
+                solidBrush = new SolidBrush(Color.Blue);                
 
                 for(int i = 0; i < foodList.Count; i++)
                 {
@@ -247,7 +285,9 @@ namespace SOFT152Steering
                     foodXPosition = (float)food1.location.X;
                     foodYPosition = (float)food1.location.Y;
 
-                    backgroundGraphics.FillEllipse(solidBrush, foodXPosition, foodYPosition, (food1.quantity / 100) * 20, (food1.quantity / 100) * 20);
+                    foodPercent = (int)((food1.quantity / 100.0) * 20.0);
+
+                    backgroundGraphics.FillEllipse(solidBrush, foodXPosition - (foodPercent/2), foodYPosition - (foodPercent/2), foodPercent, foodPercent);
                 }
 
                 solidBrush = new SolidBrush(Color.Green);
@@ -258,7 +298,7 @@ namespace SOFT152Steering
                     nestXPosition = (float)nest1.location.X;
                     nestYPosition = (float)nest1.location.Y;
 
-                    backgroundGraphics.FillEllipse(solidBrush, nestXPosition, nestYPosition, 20, 20);
+                    backgroundGraphics.FillEllipse(solidBrush, nestXPosition - 10, nestYPosition - 10, 20, 20);
                 }
             }
 
@@ -282,6 +322,22 @@ namespace SOFT152Steering
         private void startButton_Click(object sender, EventArgs e)
         {
             timer.Start();
+        }
+
+        private void drawingPanel_MouseClick(object sender, MouseEventArgs e)
+        {
+            if(e.Button == MouseButtons.Left)
+            {
+                SOFT152Vector position;
+                position = new SOFT152Vector(e.Location.X, e.Location.Y);
+                CreateFoodSource(position);
+            }
+            else if(e.Button == MouseButtons.Right)
+            {
+                SOFT152Vector position;
+                position = new SOFT152Vector(e.Location.X, e.Location.Y);
+                CreateNest(position);
+            }
         }
     }
 }
