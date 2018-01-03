@@ -25,10 +25,15 @@ namespace SOFT152Steering
         /// The location of the current food and nest known the agent 
         /// </summary>
         public SOFT152Vector NestPosMemory { set; get; }
+        public bool hasNestLocation;
 
         public SOFT152Vector FoodPosMemory { set; get; }
+        public bool hasFoodLocation;
 
         public SOFT152Vector ErasedFoodLocation { set; get; }
+        public bool hasErasedLocation;
+
+        public List<SOFT152Vector> usedUpFoodList;
 
         public bool isCarryingFood;
         /// <summary>

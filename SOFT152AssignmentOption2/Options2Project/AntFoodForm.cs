@@ -62,8 +62,11 @@ namespace SOFT152Steering
             // on which they are displayed
             worldLimits = new Rectangle(0, 0, drawingPanel.Width, drawingPanel.Height);
 
+            // sets the number of ants to make
+            // TODO: allow user to delcare 
             antLimit = 100;
 
+            // generates ants in random locations and adds them to the dynamic list 
             for (int i = 0; i < antLimit; i++)
             {
                 randX = randomGenerator.Next(0, worldLimits.Width + 1);
@@ -72,6 +75,7 @@ namespace SOFT152Steering
                 antList.Add(tempAgent);
                 antList[i].AgentSpeed = 1.0;
                 antList[i].WanderLimits = 0.25;
+                antList[i].usedUpFoodList = new List<SOFT152Vector>();
 
                 // keep the agent within the world
                 antList[i].ShouldStayInWorldBounds = true;
@@ -115,116 +119,181 @@ namespace SOFT152Steering
 
         private void timer_Tick(object sender, EventArgs e)
         {
-
+            // may be useful at a later date
             SOFT152Vector tempPosition;
 
-            // one each time tick each of the two agents makes one movment
-
-            // set some values for agent1
-            // before it moves
-            
+                        
             for (int i = 0; i < antList.Count; i++)
             {
+                // the current ant being checked for conditions eg. if close to food
+                AntAgent primaryAnt;
+                primaryAnt = antList[i];
 
+                // cycles through all food sources to check if the primary agent is close enough to
+                // interact with it
                 for (int j = 0; j < foodList.Count; j++)
                 {
-                    if (antList[i].AgentPosition.Distance(foodList[j].location) < 5)
+
+                    // sets the current food that is being checked against the primary agent
+                    Food food;
+                    food = foodList[j];
+
+                    // if the primary agent is within a 5 unit radius i will interact with the
+                    // the food (either destroying its memory of it or collecting food)
+                    if (primaryAnt.AgentPosition.Distance(food.location) < 5)
                     {
-                        if (foodList[j].quantity <= 0)
+
+                        // if the food has been depleted the ant will forget the food source 
+                        // and add it too a bank of forgoten food sources
+                        if (food.quantity <= 0)
                         {
-                            if (antList[i].FoodPosMemory != null)
+
+                            if (primaryAnt.hasFoodLocation)
                             {
-                                antList[i].ErasedFoodLocation = new SOFT152Vector(antList[i].FoodPosMemory);
+                                primaryAnt.usedUpFoodList.Add(new SOFT152Vector(primaryAnt.FoodPosMemory));
+                                primaryAnt.ErasedFoodLocation = new SOFT152Vector(primaryAnt.FoodPosMemory);
+                                primaryAnt.hasErasedLocation = true;
                             }
-                            antList[i].FoodPosMemory = null;
+
+                            primaryAnt.FoodPosMemory = null;
+                            primaryAnt.hasFoodLocation = false;
                         }
-                        else if(!antList[i].isCarryingFood)
+
+                        // if the food isn't depleted and the ant isn't carrying food then it will pick up food
+                        else if(!primaryAnt.isCarryingFood)
                         {
-                            foodList[j].quantity -= 1;
-                            antList[i].isCarryingFood = true;
+                            food.quantity -= 1;
+                            primaryAnt.isCarryingFood = true;
+                        }
+
+                    }
+
+                    // if the ant is within 40 units of the food source it will check if it know that the food has 
+                    // been erased or if it is in the list of food sources that have been erased
+                    // before, if it is then it will forget the new information straight away
+                    else if (primaryAnt.AgentPosition.Distance(food.location) < 40 && primaryAnt.hasErasedLocation)
+                    {
+                        if (!MatchingVectors(primaryAnt.ErasedFoodLocation, food.location))
+                        {
+                            primaryAnt.FoodPosMemory = food.location;
+                            primaryAnt.hasFoodLocation = true;
+                        }
+                        else
+                        {
+                            foreach (SOFT152Vector erased in primaryAnt.usedUpFoodList)
+                            {
+                                if(MatchingVectors(erased, primaryAnt.AgentPosition))
+                                {
+                                    primaryAnt.FoodPosMemory = null;
+                                    primaryAnt.hasFoodLocation = false;
+                                }
+                            }
                         }
                     }
 
-                    else if (antList[i].AgentPosition.Distance(foodList[j].location) < 40 && antList[i].ErasedFoodLocation != null)
+                    else if(primaryAnt.AgentPosition.Distance(foodList[j].location) < 40)
                     {
-                        if (antList[i].ErasedFoodLocation.X != foodList[j].location.X && antList[i].ErasedFoodLocation.Y != foodList[j].location.Y)
-                        {
-                            antList[i].FoodPosMemory = foodList[j].location;
-                        }
-                    }
-                    else if(antList[i].AgentPosition.Distance(foodList[j].location) < 40)
-                    {
-                        antList[i].FoodPosMemory = foodList[j].location;
+                        primaryAnt.FoodPosMemory = food.location;
+                        primaryAnt.hasFoodLocation = true;
                     }
                 }
 
                 for (int k = 0; k < nestList.Count; k++)
                 {
-                    if(antList[i].AgentPosition.Distance(nestList[k].location) < 5)
+
+                    Nest nest;
+                    nest = nestList[k];
+
+                    if(primaryAnt.AgentPosition.Distance(nest.location) < 5)
                     {
-                        antList[i].isCarryingFood = false;
+                        primaryAnt.isCarryingFood = false;
                     }
-                    else if (antList[i].AgentPosition.Distance(nestList[k].location) < 40)
+
+                    else if (primaryAnt.AgentPosition.Distance(nest.location) < 40)
                     {
-                        antList[i].NestPosMemory = nestList[k].location;
+                        primaryAnt.NestPosMemory = nest.location;
+                        primaryAnt.hasNestLocation = true;
                     }
                 }
 
                 for (int l = 0; l < antList.Count; l++)
                 {
-                    if (antList[i].AgentPosition.Distance(antList[l].AgentPosition) < 5 && i != l)
+
+                    AntAgent secondaryAnt;
+                    secondaryAnt = antList[l];
+
+                    if (primaryAnt.AgentPosition.Distance(secondaryAnt.AgentPosition) < 5 && i != l)
                     {
-                        if (antList[l].NestPosMemory != null && antList[i].NestPosMemory == null)
+
+                        if (secondaryAnt.hasNestLocation && !primaryAnt.hasNestLocation)
                         {
-                            antList[i].NestPosMemory = new SOFT152Vector(antList[l].NestPosMemory);
+                            primaryAnt.NestPosMemory = new SOFT152Vector(secondaryAnt.NestPosMemory);
+                            primaryAnt.hasNestLocation = true;
                         }
-                        if (antList[l].FoodPosMemory != null && antList[i].FoodPosMemory == null)
+
+                        if (secondaryAnt.hasFoodLocation && !primaryAnt.hasFoodLocation)
                         {
-                            if (antList[i].ErasedFoodLocation != null && antList[l].FoodPosMemory != null)
+                            if (!KnowsDestoryedFoodSource(primaryAnt, secondaryAnt.FoodPosMemory))
                             {
-                                if (antList[i].ErasedFoodLocation.X != antList[l].FoodPosMemory.X && antList[i].ErasedFoodLocation.Y != antList[l].FoodPosMemory.Y)
-                                {
-                                    antList[i].FoodPosMemory = new SOFT152Vector(antList[l].FoodPosMemory);
-                                }
-                            }
-                            else
-                            {
-                                antList[i].FoodPosMemory = new SOFT152Vector(antList[l].FoodPosMemory);
+                                primaryAnt.FoodPosMemory = new SOFT152Vector(secondaryAnt.FoodPosMemory);
+                                primaryAnt.hasFoodLocation = true;
                             }
                         }
+
                     }
                 }
 
                 if(randomGenerator.Next(0, 501) <= 2)
                 {
-                    antList[i].FoodPosMemory = null;
+                    primaryAnt.FoodPosMemory = null;
+                    primaryAnt.hasFoodLocation = false;
                 }
                 if (randomGenerator.Next(0, 501) <= 2)
                 {
-                    antList[i].NestPosMemory = null;
+                    primaryAnt.NestPosMemory = null;
+                    primaryAnt.hasNestLocation = false;
                 }
 
 
-                if (antList[i].FoodPosMemory != null && !antList[i].isCarryingFood)
+                if (primaryAnt.hasFoodLocation && !primaryAnt.isCarryingFood)
                 {
-                    antList[i].Approach(antList[i].FoodPosMemory);
+                    primaryAnt.Approach(primaryAnt.FoodPosMemory);
                 }
-                else if (antList[i].NestPosMemory != null && antList[i].isCarryingFood)
+                else if (primaryAnt.hasNestLocation && primaryAnt.isCarryingFood)
                 {
-                    antList[i].Approach(antList[i].NestPosMemory);
+                    primaryAnt.Approach(primaryAnt.NestPosMemory);
                 }
                 // let agent1 wander
                 else
                 {
-                    antList[i].Wander();
+                    primaryAnt.Wander();
                 }
             }
 
             DrawAgentsDoubleBuffering();
 
         }
+        
+        private bool KnowsDestoryedFoodSource(AntAgent ant, SOFT152Vector passingVector)
+        {
+            foreach( SOFT152Vector vector in ant.usedUpFoodList)
+            {
+                if(MatchingVectors(vector, passingVector))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
-
+        private bool MatchingVectors(SOFT152Vector primaryVector, SOFT152Vector secondaryVector)
+        {
+            if (primaryVector.X == secondaryVector.X && primaryVector.Y == secondaryVector.Y)
+            {
+                return true;
+            }
+            return false;
+        }
         
         /// <summary>
         /// Draws the ants and any stationary objects using double buffering
