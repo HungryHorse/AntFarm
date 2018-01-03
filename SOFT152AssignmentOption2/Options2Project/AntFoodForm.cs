@@ -45,6 +45,9 @@ namespace SOFT152Steering
             CreateAnts();
         }
 
+        /// <summary>
+        /// Creates all the ants when the simulation is first executed
+        /// </summary>
         private void CreateAnts()
         {
             antList = new List<AntAgent>();
@@ -108,7 +111,7 @@ namespace SOFT152Steering
             int imageWidth;
             int imageHeight;
 
-            // the backgroundImage  can be any size
+            // the backgroundImage can be any size
             // assume it is the same size as the panel 
             // on which the Ants are drawn
             imageWidth = drawingPanel.Width;
@@ -198,6 +201,8 @@ namespace SOFT152Steering
                     }
                 }
 
+                //Checks to see if the ant is within the radius of the nest - if it is then deposit food
+                //If the ant doesn't know where a nest is already, it will learn
                 for (int k = 0; k < nestList.Count; k++)
                 {
 
@@ -216,6 +221,7 @@ namespace SOFT152Steering
                     }
                 }
 
+                //Interacting with other ants and passing information between them
                 for (int l = 0; l < antList.Count; l++)
                 {
 
@@ -243,6 +249,7 @@ namespace SOFT152Steering
                     }
                 }
 
+                //Random chance for ants to forget the information that they have learned
                 if(randomGenerator.Next(0, 501) <= 2)
                 {
                     primaryAnt.FoodPosMemory = null;

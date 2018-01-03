@@ -36,6 +36,7 @@ namespace SOFT152Steering
         public List<SOFT152Vector> usedUpFoodList;
 
         public bool isCarryingFood;
+
         /// <summary>
         /// If the agent is using the the ApproachAgent() method, this property defines
         /// at what point the agent will reduce the speed of approach to miminic a 
