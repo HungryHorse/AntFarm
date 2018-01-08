@@ -19,21 +19,7 @@ namespace SOFT152Steering
         /// Ideal value depends on timer tick interval and realistic motion of
         /// agents needed. Suggest though in range 0 ... 2
         /// </summary>
-        public double AgentSpeed { set; get; }  
-
-        /// <summary>
-        /// The location of the current food and nest known the agent 
-        /// </summary>
-        public SOFT152Vector NestPosMemory { set; get; }
-        public bool hasNestLocation;
-
-        public SOFT152Vector FoodPosMemory { set; get; }
-        public bool hasFoodLocation;
-
-        public SOFT152Vector ErasedFoodLocation { set; get; }
-        public bool hasErasedLocation;
-
-        public List<SOFT152Vector> usedUpFoodList;
+        public double AgentSpeed { set; get; }         
 
         public bool isCarryingFood;
 
@@ -67,14 +53,14 @@ namespace SOFT152Steering
         /// Current postion of the agent, updated by the three
         /// movment methods
         /// </summary>
-        private SOFT152Vector agentPosition;  
+        protected SOFT152Vector agentPosition;  
 
         /// <summary>
         /// used in conjunction with the Wander() method
         /// to detemin the next position an agent should be in 
         /// Should remain a private field and do not edit within this class
         /// </summary>
-        private SOFT152Vector wanderPosition;
+        protected SOFT152Vector wanderPosition;
 
 
         /// <summary>
@@ -83,14 +69,14 @@ namespace SOFT152Steering
         /// will mean the agents position will be kept within the world bounds 
         /// (i.e. the  world width or the world height)
         /// </summary>
-        private Rectangle worldBounds;   // To keep track of the obejcts bounds i.e. ViewPort dimensions
+        protected Rectangle worldBounds;   // To keep track of the obejcts bounds i.e. ViewPort dimensions
 
         /// <summary>
         /// The random object passed to the agent. 
         /// Used only in the Wander() method to generate a 
         /// random direction to move in
         /// </summary>
-        private Random randomNumberGenerator;              // random number used for wandering
+        protected Random randomNumberGenerator;              // random number used for wandering
 
 
 
@@ -118,7 +104,7 @@ namespace SOFT152Steering
         /// Initialises the Agents various fields
         /// with default values
         /// </summary>
-        private void InitialiseAgent()
+        protected void InitialiseAgent()
         {
             wanderPosition = new SOFT152Vector();
 
@@ -173,7 +159,7 @@ namespace SOFT152Steering
 
 
   
-        private void StayInWorld()
+        protected void StayInWorld()
         {
             // if the agent should stay with in the world
             if (ShouldStayInWorldBounds == true)

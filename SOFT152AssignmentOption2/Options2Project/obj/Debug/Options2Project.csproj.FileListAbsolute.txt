@@ -60,3 +60,14 @@ C:\Users\ajweb_000\Documents\GitHub\SOFT152-C-Practical\AntFarm\SOFT152Assignmen
 C:\Users\ajweb_000\Documents\GitHub\SOFT152-C-Practical\AntFarm\SOFT152AssignmentOption2\Options2Project\obj\Debug\Options2Project.csproj.CoreCompileInputs.cache
 C:\Users\ajweb_000\Documents\GitHub\SOFT152-C-Practical\AntFarm\SOFT152AssignmentOption2\Options2Project\obj\Debug\SteeringProject.exe
 C:\Users\ajweb_000\Documents\GitHub\SOFT152-C-Practical\AntFarm\SOFT152AssignmentOption2\Options2Project\obj\Debug\SteeringProject.pdb
+C:\Users\awebb4\Documents\GitHub\AntFarm\SOFT152AssignmentOption2\Options2Project\bin\Debug\SteeringProject.exe.config
+C:\Users\awebb4\Documents\GitHub\AntFarm\SOFT152AssignmentOption2\Options2Project\bin\Debug\SteeringProject.exe
+C:\Users\awebb4\Documents\GitHub\AntFarm\SOFT152AssignmentOption2\Options2Project\bin\Debug\SteeringProject.pdb
+C:\Users\awebb4\Documents\GitHub\AntFarm\SOFT152AssignmentOption2\Options2Project\bin\Debug\SteeringLibrary.dll
+C:\Users\awebb4\Documents\GitHub\AntFarm\SOFT152AssignmentOption2\Options2Project\obj\Debug\Options2Project.csprojResolveAssemblyReference.cache
+C:\Users\awebb4\Documents\GitHub\AntFarm\SOFT152AssignmentOption2\Options2Project\obj\Debug\SteeringProject.Properties.Resources.resources
+C:\Users\awebb4\Documents\GitHub\AntFarm\SOFT152AssignmentOption2\Options2Project\obj\Debug\SOFT152Steering.AntFoodForm.resources
+C:\Users\awebb4\Documents\GitHub\AntFarm\SOFT152AssignmentOption2\Options2Project\obj\Debug\Options2Project.csproj.GenerateResource.Cache
+C:\Users\awebb4\Documents\GitHub\AntFarm\SOFT152AssignmentOption2\Options2Project\obj\Debug\Options2Project.csproj.CoreCompileInputs.cache
+C:\Users\awebb4\Documents\GitHub\AntFarm\SOFT152AssignmentOption2\Options2Project\obj\Debug\SteeringProject.exe
+C:\Users\awebb4\Documents\GitHub\AntFarm\SOFT152AssignmentOption2\Options2Project\obj\Debug\SteeringProject.pdb

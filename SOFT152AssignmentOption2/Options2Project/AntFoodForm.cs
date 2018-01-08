@@ -15,7 +15,7 @@ namespace SOFT152Steering
     public partial class AntFoodForm : Form
     {
         // Declares list of agents
-        private List<AntAgent> antList;
+        private List<WorkerAntAgent> antList;
 
         // Declares list of nests
         private List<Nest> nestList;
@@ -50,8 +50,8 @@ namespace SOFT152Steering
         /// </summary>
         private void CreateAnts()
         {
-            antList = new List<AntAgent>();
-            AntAgent tempAgent;
+            antList = new List<WorkerAntAgent>();
+            WorkerAntAgent tempAgent;
             Rectangle worldLimits;
             int randX;
             int randY;
@@ -74,7 +74,7 @@ namespace SOFT152Steering
             {
                 randX = randomGenerator.Next(0, worldLimits.Width + 1);
                 randY = randomGenerator.Next(0, worldLimits.Height + 1);
-                tempAgent = new AntAgent(new SOFT152Vector(randX, randY), randomGenerator, worldLimits);
+                tempAgent = new WorkerAntAgent(new SOFT152Vector(randX, randY), randomGenerator, worldLimits);
                 antList.Add(tempAgent);
                 antList[i].AgentSpeed = 1.0;
                 antList[i].WanderLimits = 0.25;
@@ -129,8 +129,21 @@ namespace SOFT152Steering
             for (int i = 0; i < antList.Count; i++)
             {
                 // the current ant being checked for conditions eg. if close to food
-                AntAgent primaryAnt;
+                WorkerAntAgent primaryAnt;
                 primaryAnt = antList[i];
+
+                // this will be checked and will remove the ants memory of food if it gets within 2 units of it's food memory
+                if (primaryAnt.hasFoodLocation)
+                {
+                    if (primaryAnt.AgentPosition.Distance(primaryAnt.FoodPosMemory) < 2)
+                    {
+                        primaryAnt.usedUpFoodList.Add(new SOFT152Vector(primaryAnt.FoodPosMemory));
+                        primaryAnt.ErasedFoodLocation = new SOFT152Vector(primaryAnt.FoodPosMemory);
+                        primaryAnt.hasErasedLocation = true;
+                        primaryAnt.FoodPosMemory = null;
+                        primaryAnt.hasFoodLocation = false;
+                    }
+                }
 
                 // cycles through all food sources to check if the primary agent is close enough to
                 // interact with it
@@ -160,6 +173,8 @@ namespace SOFT152Steering
 
                             primaryAnt.FoodPosMemory = null;
                             primaryAnt.hasFoodLocation = false;
+
+                            foodList.RemoveAt(j);
                         }
 
                         // if the food isn't depleted and the ant isn't carrying food then it will pick up food
@@ -225,7 +240,7 @@ namespace SOFT152Steering
                 for (int l = 0; l < antList.Count; l++)
                 {
 
-                    AntAgent secondaryAnt;
+                    WorkerAntAgent secondaryAnt;
                     secondaryAnt = antList[l];
 
                     if (primaryAnt.AgentPosition.Distance(secondaryAnt.AgentPosition) < 5 && i != l)
@@ -281,7 +296,7 @@ namespace SOFT152Steering
 
         }
         
-        private bool KnowsDestoryedFoodSource(AntAgent ant, SOFT152Vector passingVector)
+        private bool KnowsDestoryedFoodSource(WorkerAntAgent ant, SOFT152Vector passingVector)
         {
             foreach( SOFT152Vector vector in ant.usedUpFoodList)
             {
