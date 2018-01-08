@@ -16,9 +16,11 @@ namespace SOFT152Steering
     {
         // Declares list of agents
         private List<WorkerAntAgent> antList;
+        private List<AgressiveAntAgent> agressiveAntList;
 
         // Declares list of nests
-        private List<Nest> nestList;
+        private List<WorkerAntNest> workerNestList;
+        private List<AgressiveAntNest> agressiveNestList;
 
         // Declares list of food
         private List<Food> foodList;
@@ -39,7 +41,8 @@ namespace SOFT152Steering
 
             CreateBackgroundImage();
 
-            nestList = new List<Nest>();
+            workerNestList = new List<WorkerAntNest>();
+            agressiveNestList = new List<AgressiveAntNest>();
             foodList = new List<Food>();
 
             CreateAnts();
@@ -51,7 +54,9 @@ namespace SOFT152Steering
         private void CreateAnts()
         {
             antList = new List<WorkerAntAgent>();
+            agressiveAntList = new List<AgressiveAntAgent>();
             WorkerAntAgent tempAgent;
+            AgressiveAntAgent tempBadGuy;
             Rectangle worldLimits;
             int randX;
             int randY;
@@ -87,6 +92,36 @@ namespace SOFT152Steering
             someObject = new SOFT152Vector(250, 250);
         }
 
+        private void CreateAgressiveAnts(SOFT152Vector position)
+        {
+            agressiveAntList = new List<AgressiveAntAgent>();
+            AgressiveAntAgent tempBadGuy;
+            Rectangle worldLimits;
+            int antLimit;
+
+            // create a radnom object to pass to the ants
+            randomGenerator = new Random();
+
+            // define some world size for the ants to move around on
+            // assume the size of the world is the same size as the panel
+            // on which they are displayed
+            worldLimits = new Rectangle(0, 0, drawingPanel.Width, drawingPanel.Height);
+
+            // sets the number of ants to make
+            // TODO: allow user to delcare 
+            antLimit = 10;
+            
+
+            for (int i = 0; i < antLimit; i++)
+            {
+                
+                tempBadGuy = new AgressiveAntAgent(position, randomGenerator, worldLimits);
+                agressiveAntList.Add(tempBadGuy);
+                agressiveAntList[i].AgentSpeed = 1.5;
+                agressiveAntList[i].WanderLimits = 0.25;
+            }
+        }
+
         private void CreateFoodSource(SOFT152Vector position)
         { 
             Food tempFood;
@@ -95,12 +130,20 @@ namespace SOFT152Steering
             foodList.Add(tempFood);
         }
 
-        private void CreateNest(SOFT152Vector position)
+        private void CreateWorkerNest(SOFT152Vector position)
         {
-            Nest tempNest;
+            WorkerAntNest tempNest;
 
-            tempNest = new Nest(position);
-            nestList.Add(tempNest);
+            tempNest = new WorkerAntNest(position);
+            workerNestList.Add(tempNest);
+        }
+
+        private void CreateAgressiveNest(SOFT152Vector position)
+        {
+            AgressiveAntNest tempNest;
+
+            tempNest = new AgressiveAntNest(position);
+            agressiveNestList.Add(tempNest);
         }
 
         /// <summary>
@@ -218,11 +261,11 @@ namespace SOFT152Steering
 
                 //Checks to see if the ant is within the radius of the nest - if it is then deposit food
                 //If the ant doesn't know where a nest is already, it will learn
-                for (int k = 0; k < nestList.Count; k++)
+                for (int k = 0; k < workerNestList.Count; k++)
                 {
 
                     Nest nest;
-                    nest = nestList[k];
+                    nest = workerNestList[k];
 
                     if(primaryAnt.AgentPosition.Distance(nest.location) < 5)
                     {
@@ -292,6 +335,81 @@ namespace SOFT152Steering
                 }
             }
 
+
+
+            // agressive ants
+            for(int i = 0; i < agressiveAntList.Count; i++)
+            {
+                AgressiveAntAgent agressorAnt;
+                agressorAnt = agressiveAntList[i];
+
+                if (agressorAnt.hasPreviousAntFound)
+                {
+                    if(agressorAnt.AgentPosition.Distance(agressorAnt.lastAntFoundWithFood) < 2)
+                    {
+                        agressorAnt.hasPreviousAntFound = false;
+                        agressorAnt.lastAntFoundWithFood = null;
+                    }
+                }
+
+                for (int j = 0; j < antList.Count; j++)
+                {
+                    WorkerAntAgent viewedAnt;
+                    viewedAnt = antList[j];
+
+                    if(agressorAnt.AgentPosition.Distance(viewedAnt.AgentPosition) < 5 && viewedAnt.isCarryingFood)
+                    {
+                        agressorAnt.isCarryingFood = true;
+                        viewedAnt.isCarryingFood = false;
+                        agressorAnt.hasFollowing = false;
+                        agressorAnt.following = null;
+                        agressorAnt.hasPreviousAntFound = true;
+                        agressorAnt.lastAntFoundWithFood = new SOFT152Vector(agressorAnt.AgentPosition);
+                    }
+                    else if(agressorAnt.AgentPosition.Distance(viewedAnt.AgentPosition) < 40 && !agressorAnt.isCarryingFood && viewedAnt.isCarryingFood)
+                    {
+                        agressorAnt.hasFollowing = true;
+                        agressorAnt.following = viewedAnt;
+                    }
+                }
+
+                for (int k = 0; k < agressiveNestList.Count; k++)
+                {
+
+                    Nest nest;
+                    nest = agressiveNestList[k];
+
+                    if (agressorAnt.AgentPosition.Distance(nest.location) < 5)
+                    {
+                        agressorAnt.isCarryingFood = false;
+                    }
+
+                    else if (agressorAnt.AgentPosition.Distance(nest.location) < 40 && !agressorAnt.hasNestLocation)
+                    {
+                        agressorAnt.NestPosMemory = nest.location;
+                        agressorAnt.hasNestLocation = true;
+                    }
+                }
+
+                if (agressorAnt.hasFollowing && !agressorAnt.isCarryingFood)
+                {
+                    agressorAnt.Approach(agressorAnt.following.AgentPosition);
+                }
+                else if (agressorAnt.hasPreviousAntFound && !agressorAnt.isCarryingFood)
+                {
+                    agressorAnt.Approach(agressorAnt.lastAntFoundWithFood);
+                }
+                else if (agressorAnt.isCarryingFood && agressorAnt.hasNestLocation)
+                {
+                    agressorAnt.Approach(agressorAnt.NestPosMemory);
+                }
+                else
+                {
+                    agressorAnt.Wander();
+                }
+            }
+
+
             DrawAgentsDoubleBuffering();
 
         }
@@ -323,8 +441,10 @@ namespace SOFT152Steering
         private void DrawAgentsDoubleBuffering()
         {
             AntAgent agent1;
+            AntAgent agent2;
             Food food1;
             Nest nest1;
+            Nest nest2;
             // using FillRectangle to draw the agents
             // so declare variables to draw with
             float agentXPosition;
@@ -368,6 +488,21 @@ namespace SOFT152Steering
                     backgroundGraphics.FillRectangle(solidBrush, agentXPosition, agentYPosition, antSize, antSize);
                 }
 
+                for (int i = 0; i < agressiveAntList.Count; i++)
+                {
+                    solidBrush = new SolidBrush(Color.DarkOrange);
+                    agent2 = agressiveAntList[i];
+                    agentXPosition = (float)agent2.AgentPosition.X;
+                    agentYPosition = (float)agent2.AgentPosition.Y;
+
+                    if (agent2.isCarryingFood)
+                    {
+                        solidBrush = new SolidBrush(Color.Gold);
+                    }
+
+                    backgroundGraphics.FillRectangle(solidBrush, agentXPosition, agentYPosition, antSize, antSize);
+                }
+
                 solidBrush = new SolidBrush(Color.Blue);                
 
                 for(int i = 0; i < foodList.Count; i++)
@@ -383,11 +518,22 @@ namespace SOFT152Steering
 
                 solidBrush = new SolidBrush(Color.Green);
 
-                for (int i = 0; i < nestList.Count; i++)
+                for (int i = 0; i < workerNestList.Count; i++)
                 {
-                    nest1 = nestList[i];
+                    nest1 = workerNestList[i];
                     nestXPosition = (float)nest1.location.X;
                     nestYPosition = (float)nest1.location.Y;
+
+                    backgroundGraphics.FillEllipse(solidBrush, nestXPosition - 10, nestYPosition - 10, 20, 20);
+                }
+
+                solidBrush = new SolidBrush(Color.Black);
+
+                for (int i = 0; i < agressiveNestList.Count; i++)
+                {
+                    nest2 = agressiveNestList[i];
+                    nestXPosition = (float)nest2.location.X;
+                    nestYPosition = (float)nest2.location.Y;
 
                     backgroundGraphics.FillEllipse(solidBrush, nestXPosition - 10, nestYPosition - 10, 20, 20);
                 }
@@ -427,7 +573,14 @@ namespace SOFT152Steering
             {
                 SOFT152Vector position;
                 position = new SOFT152Vector(e.Location.X, e.Location.Y);
-                CreateNest(position);
+                CreateWorkerNest(position);
+            }
+            else if(e.Button == MouseButtons.Middle)
+            {
+                SOFT152Vector position;
+                position = new SOFT152Vector(e.Location.X, e.Location.Y);
+                CreateAgressiveNest(position);
+                CreateAgressiveAnts(position);
             }
         }
     }

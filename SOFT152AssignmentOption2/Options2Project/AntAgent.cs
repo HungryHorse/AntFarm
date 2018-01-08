@@ -47,7 +47,7 @@ namespace SOFT152Steering
         public bool ShouldStayInWorldBounds { set; get; }
 
         // --------------------------------------------
-        // Private fields 
+        // Protected fields 
 
         /// <summary>
         /// Current postion of the agent, updated by the three

@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgressiveAntAgent.cs" />
+    <Compile Include="AgressiveAntNest.cs" />
     <Compile Include="AntAgent.cs" />
     <Compile Include="AntFoodForm.cs">
       <SubType>Form</SubType>
@@ -66,6 +67,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorkerAntAgent.cs" />
+    <Compile Include="WorkerAntNest.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
