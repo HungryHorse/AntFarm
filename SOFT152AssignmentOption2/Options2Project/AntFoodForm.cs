@@ -94,7 +94,14 @@ namespace SOFT152Steering
 
         private void CreateAgressiveAnts(SOFT152Vector position)
         {
-            agressiveAntList = new List<AgressiveAntAgent>();
+            try
+            {
+                Console.Write(agressiveAntList);
+            }
+            catch
+            {
+                agressiveAntList = new List<AgressiveAntAgent>();
+            }
             AgressiveAntAgent tempBadGuy;
             Rectangle worldLimits;
             int antLimit;
