@@ -1,0 +1,97 @@
+<Project>
+  <Name>Ant Farm</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Untitled</Name>
+    <Language>CSharp</Language>
+    <Entities />
+    <Relationships />
+  </ProjectItem>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Untitled</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>AntAgent</Name>
+        <Access>Public</Access>
+        <Location left="122" top="36" />
+        <Size width="392" height="383" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">public bool isCarryingFood</Member>
+        <Member type="Field">protected SOFT152Vector agentPosition</Member>
+        <Member type="Field">protected SOFT152Vector wanderPosition</Member>
+        <Member type="Field">protected rectangle worldBounds</Member>
+        <Member type="Field">protected Random randomNumberGenerator</Member>
+        <Member type="Property">public double AvoidDistance { get; set; }</Member>
+        <Member type="Property">public SOFT152Vector AgentPosition { get; set; }</Member>
+        <Member type="Property">public double WanderLimits { get; set; }</Member>
+        <Member type="Property">public bool ShouldStayInWorldBounds { get; set; }</Member>
+        <Member type="Property">public double AgentSpeed { get; set; }</Member>
+        <Member type="Property">public double ApproachRadius { get; set; }</Member>
+        <Member type="Method">public void Wander()</Member>
+        <Member type="Method">public void Approach(SOFT152Vector objectPosition)</Member>
+        <Member type="Method">public void FleeFrom(SOFT152Vector objectPosition)</Member>
+        <Member type="Method">protected void InitialiseAgent()</Member>
+        <Member type="Method">protected void StayInWorld()</Member>
+        <Member type="Constructor">public AntAgent(SOFT152Vector position, Random random)</Member>
+        <Member type="Constructor">public AntAgent(SOFT152Vector position, Random random, Rectangle bounds)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>WorkerAntAgent</Name>
+        <Access>Public</Access>
+        <Location left="434" top="626" />
+        <Size width="272" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">public bool hasNestLocation</Member>
+        <Member type="Field">public bool hasFoodLocation</Member>
+        <Member type="Field">public bool hasErasedFoodLocation</Member>
+        <Member type="Field">public List&lt;SOFT152Vector&gt; usedUpFoodList</Member>
+        <Member type="Property">public SOFT152Vector NestPosMemory { get; set; }</Member>
+        <Member type="Property">public SOFT152Vector FoodPosMemory { get; set; }</Member>
+        <Member type="Constructor">public WorkerAntAgent(SOFT152Vector position, Random random, Rectangle bounds)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>AgressiveAntAgent</Name>
+        <Access>Public</Access>
+        <Location left="45" top="626" />
+        <Size width="272" height="230" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">public WorkerAntAgent following</Member>
+        <Member type="Field">public bool hasFollowing</Member>
+        <Member type="Field">public SOFT152Vector lastAntFoundWithFood</Member>
+        <Member type="Field">public bool hasPreviousAntFound</Member>
+        <Member type="Field">public bool hasNestLocation</Member>
+        <Member type="Property">public SOFT152Vector NestPosMemory { get; set; }</Member>
+        <Member type="Constructor">public AgressiveAntAgent(int x)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Generalization" first="1" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>497</X>
+          <Y>601</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>446</X>
+          <Y>444</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="2" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>104</X>
+          <Y>601</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>206</X>
+          <Y>444</Y>
+        </BendPoint>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>
