@@ -40,10 +40,11 @@ namespace SOFT152Steering
             InitializeComponent();
 
             CreateBackgroundImage();
-
+            
             workerNestList = new List<WorkerAntNest>();
             agressiveNestList = new List<AgressiveAntNest>();
             foodList = new List<Food>();
+            agressiveAntList = new List<AgressiveAntAgent>();
 
             CreateAnts();
         }
@@ -94,14 +95,6 @@ namespace SOFT152Steering
 
         private void CreateAgressiveAnts(SOFT152Vector position)
         {
-            try
-            {
-                Console.Write(agressiveAntList);
-            }
-            catch
-            {
-                agressiveAntList = new List<AgressiveAntAgent>();
-            }
             AgressiveAntAgent tempBadGuy;
             Rectangle worldLimits;
             int antLimit;
