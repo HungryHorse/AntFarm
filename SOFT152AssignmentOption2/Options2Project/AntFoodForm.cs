@@ -111,7 +111,7 @@ namespace SOFT152Steering
             // TODO: allow user to delcare 
             antLimit = 10;
             
-
+            //Creates all aggressive ants and adds them to the correct list
             for (int i = 0; i < antLimit; i++)
             {
                 
@@ -122,6 +122,10 @@ namespace SOFT152Steering
             }
         }
 
+        /// <summary>
+        /// Creates a food source for the worker ants to collect from
+        /// </summary>
+        /// <param name="position"> The position at which the food source should be created </param>
         private void CreateFoodSource(SOFT152Vector position)
         { 
             Food tempFood;
@@ -130,6 +134,10 @@ namespace SOFT152Steering
             foodList.Add(tempFood);
         }
 
+        /// <summary>
+        /// Creates a worker ant nest
+        /// </summary>
+        /// <param name="position">The position that the nest should be placed in</param>
         private void CreateWorkerNest(SOFT152Vector position)
         {
             WorkerAntNest tempNest;
@@ -138,6 +146,10 @@ namespace SOFT152Steering
             workerNestList.Add(tempNest);
         }
 
+        /// <summary>
+        /// Creates a nest for the aggressive ants
+        /// </summary>
+        /// <param name="position">The position for the nest to be placed at</param>
         private void CreateAgressiveNest(SOFT152Vector position)
         {
             AgressiveAntNest tempNest;
@@ -165,10 +177,7 @@ namespace SOFT152Steering
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            // may be useful at a later date
-            SOFT152Vector tempPosition;
-
-                        
+            
             for (int i = 0; i < antList.Count; i++)
             {
                 // the current ant being checked for conditions eg. if close to food
@@ -414,6 +423,12 @@ namespace SOFT152Steering
 
         }
         
+        /// <summary>
+        /// Returns true of false in regards to whether an ant knows about a destroyed food source
+        /// </summary>
+        /// <param name="ant">The ant that is having its memory checked</param>
+        /// <param name="passingVector">The location of the proposed nest</param>
+        /// <returns></returns>
         private bool KnowsDestoryedFoodSource(WorkerAntAgent ant, SOFT152Vector passingVector)
         {
             foreach( SOFT152Vector vector in ant.usedUpFoodList)
@@ -426,6 +441,12 @@ namespace SOFT152Steering
             return false;
         }
 
+        /// <summary>
+        /// Checks to see whether two vectors are the same
+        /// </summary>
+        /// <param name="primaryVector">The first value</param>
+        /// <param name="secondaryVector">And the value that the first one is being compared to</param>
+        /// <returns></returns>
         private bool MatchingVectors(SOFT152Vector primaryVector, SOFT152Vector secondaryVector)
         {
             if (primaryVector.X == secondaryVector.X && primaryVector.Y == secondaryVector.Y)
@@ -490,14 +511,14 @@ namespace SOFT152Steering
 
                 for (int i = 0; i < agressiveAntList.Count; i++)
                 {
-                    solidBrush = new SolidBrush(Color.DarkOrange);
+                    solidBrush = new SolidBrush(Color.Green);
                     agent2 = agressiveAntList[i];
                     agentXPosition = (float)agent2.AgentPosition.X;
                     agentYPosition = (float)agent2.AgentPosition.Y;
 
                     if (agent2.isCarryingFood)
                     {
-                        solidBrush = new SolidBrush(Color.Gold);
+                        solidBrush = new SolidBrush(Color.Cyan);
                     }
 
                     backgroundGraphics.FillRectangle(solidBrush, agentXPosition, agentYPosition, antSize, antSize);
@@ -516,7 +537,7 @@ namespace SOFT152Steering
                     backgroundGraphics.FillEllipse(solidBrush, foodXPosition - (foodPercent/2), foodYPosition - (foodPercent/2), foodPercent, foodPercent);
                 }
 
-                solidBrush = new SolidBrush(Color.Green);
+                solidBrush = new SolidBrush(Color.Black);
 
                 for (int i = 0; i < workerNestList.Count; i++)
                 {
@@ -527,7 +548,7 @@ namespace SOFT152Steering
                     backgroundGraphics.FillEllipse(solidBrush, nestXPosition - 10, nestYPosition - 10, 20, 20);
                 }
 
-                solidBrush = new SolidBrush(Color.Black);
+                solidBrush = new SolidBrush(Color.DarkGreen);
 
                 for (int i = 0; i < agressiveNestList.Count; i++)
                 {

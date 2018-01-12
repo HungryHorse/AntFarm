@@ -11,12 +11,18 @@ namespace SteeringProject
 {
     class AgressiveAntAgent : AntAgent
     {
+
+        //The worker ant that the aggressive ant is currently following as well as
+        //a boolean to show whether or not it has a target
         public WorkerAntAgent following;
         public bool hasFollowing;
 
+        //The position of the most recently located worker ant that had food as well as a boolean
+        //to quickly check whether or not it has an ant in memory
         public SOFT152Vector lastAntFoundWithFood;
         public bool hasPreviousAntFound;
 
+        //The position of the aggressive ant nest and whether or not one is known
         public SOFT152Vector NestPosMemory { set; get; }
         public bool hasNestLocation;
 

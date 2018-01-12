@@ -3,8 +3,130 @@
   <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
     <Name>Untitled</Name>
     <Language>CSharp</Language>
-    <Entities />
-    <Relationships />
+    <Entities>
+      <Entity type="Class">
+        <Name>AntAgent</Name>
+        <Access>Public</Access>
+        <Location left="338" top="219" />
+        <Size width="162" height="216" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>WorkerAntAgent</Name>
+        <Access>Public</Access>
+        <Location left="228" top="348" />
+        <Size width="162" height="216" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>AggressiveAntAgent</Name>
+        <Access>Public</Access>
+        <Location left="434" top="348" />
+        <Size width="162" height="216" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>AntFoodForm</Name>
+        <Access>Public</Access>
+        <Location left="569" top="219" />
+        <Size width="162" height="216" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Food</Name>
+        <Access>Public</Access>
+        <Location left="824" top="153" />
+        <Size width="162" height="216" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Nest</Name>
+        <Access>Public</Access>
+        <Location left="824" top="219" />
+        <Size width="162" height="216" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>AggressiveAntNest</Name>
+        <Access>Public</Access>
+        <Location left="943" top="348" />
+        <Size width="162" height="216" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>WorkerAntNest</Name>
+        <Access>Public</Access>
+        <Location left="713" top="348" />
+        <Size width="162" height="216" />
+        <Collapsed>True</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Generalization" first="1" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>404</X>
+          <Y>292</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="2" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>430</X>
+          <Y>290</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="7" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>895</X>
+          <Y>290</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="6" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>915</X>
+          <Y>289</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="3" second="4">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="3" second="5">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="3" second="0">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+    </Relationships>
   </ProjectItem>
   <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
     <Name>Untitled</Name>
