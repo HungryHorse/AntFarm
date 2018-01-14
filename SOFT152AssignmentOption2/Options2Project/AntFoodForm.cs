@@ -337,7 +337,7 @@ namespace SOFT152Steering
                 {
                     primaryAnt.Approach(primaryAnt.NestPosMemory);
                 }
-                // let agent1 wander
+                // let ant wander
                 else
                 {
                     primaryAnt.Wander();
@@ -352,6 +352,8 @@ namespace SOFT152Steering
                 AgressiveAntAgent agressorAnt;
                 agressorAnt = agressiveAntList[i];
 
+                // if the agressive ant gets to where it has memory of it's last food location and doesn't find more it will forget this location so
+                // it does not get stuck
                 if (agressorAnt.hasPreviousAntFound)
                 {
                     if(agressorAnt.AgentPosition.Distance(agressorAnt.lastAntFoundWithFood) < 2)
@@ -361,11 +363,13 @@ namespace SOFT152Steering
                     }
                 }
 
+                // this will check every worker ant
                 for (int j = 0; j < antList.Count; j++)
                 {
                     WorkerAntAgent viewedAnt;
                     viewedAnt = antList[j];
 
+                    // if the aggressive ant gets within 5 of a worker ant carrying food then it will take the food from it
                     if(agressorAnt.AgentPosition.Distance(viewedAnt.AgentPosition) < 5 && viewedAnt.isCarryingFood)
                     {
                         agressorAnt.isCarryingFood = true;
@@ -375,6 +379,8 @@ namespace SOFT152Steering
                         agressorAnt.hasPreviousAntFound = true;
                         agressorAnt.lastAntFoundWithFood = new SOFT152Vector(agressorAnt.AgentPosition);
                     }
+
+                    // if the ant is within 40 of another nat carrying food it will begin to follow it
                     else if(agressorAnt.AgentPosition.Distance(viewedAnt.AgentPosition) < 40 && !agressorAnt.isCarryingFood && viewedAnt.isCarryingFood)
                     {
                         agressorAnt.hasFollowing = true;
@@ -382,6 +388,7 @@ namespace SOFT152Steering
                     }
                 }
 
+                // this is to make sure the aggresive ant knows the nest location and if it is carrying food and is within 5 units it will deposit it within it's nest
                 for (int k = 0; k < agressiveNestList.Count; k++)
                 {
 
@@ -400,6 +407,7 @@ namespace SOFT152Steering
                     }
                 }
 
+                // makes the aggressive ant follow the correct movement behaviour
                 if (agressorAnt.hasFollowing && !agressorAnt.isCarryingFood)
                 {
                     agressorAnt.Approach(agressorAnt.following.AgentPosition);

@@ -92,3 +92,6 @@ C:\Users\jbrew_514ilfu\OneDrive\Documents\GitHub\AntFarm\SOFT152AssignmentOption
 C:\Users\jbrew_514ilfu\OneDrive\Documents\GitHub\AntFarm\SOFT152AssignmentOption2\Options2Project\obj\Debug\Options2Project.csproj.GenerateResource.Cache
 C:\Users\jbrew_514ilfu\OneDrive\Documents\GitHub\AntFarm\SOFT152AssignmentOption2\Options2Project\obj\Debug\SteeringProject.exe
 C:\Users\jbrew_514ilfu\OneDrive\Documents\GitHub\AntFarm\SOFT152AssignmentOption2\Options2Project\obj\Debug\SteeringProject.pdb
+C:\Users\Jack Brewer\Documents\GitHub\AntFarm\SOFT152AssignmentOption2\Options2Project\bin\Debug\SteeringProject.exe.config
+C:\Users\Jack Brewer\Documents\GitHub\AntFarm\SOFT152AssignmentOption2\Options2Project\obj\Debug\SteeringProject.exe
+C:\Users\Jack Brewer\Documents\GitHub\AntFarm\SOFT152AssignmentOption2\Options2Project\obj\Debug\SteeringProject.pdb
